@@ -11,7 +11,6 @@ const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
 const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false)
 const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false)
 const [slectedCard, setSlectedCard] = useState(false)
-// const [isOpenSizePopup, setIsOpenSizePopup] = useState(false)
 
 
 function handleEditProfileClick() {
@@ -32,8 +31,6 @@ function closeAllPopups() {
 
 function handleCardClick(card) {
   setSlectedCard({link: card.link, name: card.name})
-  // setSlectedCard(true)
-  // setIsOpenSizePopup(true)
 } 
 
   return (
