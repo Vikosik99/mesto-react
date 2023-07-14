@@ -15,10 +15,10 @@
 
 /*525px*/
 
-@media screen and (max-width: 525px) {
+/* @media screen and (max-width: 525px) {
   .popup__container {
     gap: 16px 0;
     justify-items: end;
     width: 282px;
   }
-}
+} */

@@ -10,7 +10,7 @@ class Api {
   }
 
   getInitialCards() {
-    return fetch("https://mesto.nomoreparties.co/v1/cohort-66/users/me", {
+    return fetch(`${this._url}/users/me`, {
       headers: {
         authorization: this._authorization,
       },
@@ -18,6 +18,7 @@ class Api {
   }
 
   // Cоздание карточек с сервера
+
   getCards() {
     return fetch(`${this._url}/cards`, {
       headers: {
@@ -27,7 +28,7 @@ class Api {
   }
 
   setUserInfo(data) {
-    return fetch("https://mesto.nomoreparties.co/v1/cohort-66/users/me", {
+    return fetch(`${this._url}/users/me`, {
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({
@@ -38,20 +39,17 @@ class Api {
   }
 
   setUserAvatar(data) {
-    return fetch(
-      "https://mesto.nomoreparties.co/v1/cohort-66/users/me/avatar",
-      {
-        method: "PATCH",
-        headers: this._headers,
-        body: JSON.stringify({
-          avatar: data.avatarlink,
-        }),
-      }
-    ).then(this._checkRes);
+    return fetch(`${this._url}/users/me/avatar`, {
+      method: "PATCH",
+      headers: this._headers,
+      body: JSON.stringify({
+        avatar: data.avatarlink,
+      }),
+    }).then(this._checkRes);
   }
 
   createNewCard(data) {
-    return fetch("https://mesto.nomoreparties.co/v1/cohort-66/cards", {
+    return fetch(`${this._url}/cards`, {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({
@@ -64,31 +62,25 @@ class Api {
   //   лайк карточки
 
   addLike(cardId) {
-    return fetch(
-      `https://mesto.nomoreparties.co/v1/cohort-66/cards/${cardId}/likes`,
-      {
-        method: "PUT",
-        headers: {
-          authorization: this._authorization,
-        },
-      }
-    ).then(this._checkRes);
+    return fetch(`${this._url}/cards/${cardId}/likes`, {
+      method: "PUT",
+      headers: {
+        authorization: this._authorization,
+      },
+    }).then(this._checkRes);
   }
 
   deleteLike(cardId) {
-    return fetch(
-      `https://mesto.nomoreparties.co/v1/cohort-66/cards/${cardId}/likes`,
-      {
-        method: "DELETE",
-        headers: {
-          authorization: this._authorization,
-        },
-      }
-    ).then(this._checkRes);
+    return fetch(`${this._url}/cards/${cardId}/likes`, {
+      method: "DELETE",
+      headers: {
+        authorization: this._authorization,
+      },
+    }).then(this._checkRes);
   }
 
   deleteCard(id) {
-    return fetch(`https://mesto.nomoreparties.co/v1/cohort-66/cards/${id}`, {
+    return fetch(`${this._url}/cards/${id}`, {
       method: "DELETE",
       headers: this._headers,
     }).then(this._checkRes);
