@@ -3,15 +3,15 @@ import Main from "./Main/Main.jsx";
 import Footer from "./Footer/Footer.jsx";
 import PopupWithForm from "./PopupWithForm/PopupWithForm.jsx";
 import ImagePopup from "./ImagePopup/ImagePopup.jsx";
-import {useState} from 'react';
-import { findAllByTestId } from "@testing-library/react";
+import {useEffect, useState} from 'react';
+
 
 function App() {
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false)
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false)
-  const [selectedCard, setSelectedCard] = useState(false, null)
+  const [selectedCard, setSelectedCard] = useState({})
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true)
@@ -26,15 +26,23 @@ function App() {
   }
 
   function closeAllPopups() {
-    setIsEditProfilePopupOpen(false, null)
-    setIsAddPlacePopupOpen(false, null)
-    setIsEditAvatarPopupOpen(false, null)
-    setSelectedCard(false, null)
+    setIsEditProfilePopupOpen(false)
+    setIsAddPlacePopupOpen(false)
+    setIsEditAvatarPopupOpen(false)
+    setSelectedCard({})
   }
 
   function handleCardClick(card) {
     setSelectedCard({link: card.link, name: card.name})
+    setSelectedCard(true)
   } 
+
+  useEffect(() => {
+    //  Check if NOT undefined or null
+    if (selectedCard !== undefined && selectedCard !== null) {
+      console.log(' variable is NOT undefined or null');
+    }
+  }, [selectedCard]);
 
   return (
     <div className="page__content">
