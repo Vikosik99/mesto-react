@@ -3,7 +3,7 @@ import Main from "./Main/Main.jsx";
 import Footer from "./Footer/Footer.jsx";
 import PopupWithForm from "./PopupWithForm/PopupWithForm.jsx";
 import ImagePopup from "./ImagePopup/ImagePopup.jsx";
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false)
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false)
-  const [selectedCard, setSelectedCard] = useState({})
+  const [selectedCard, setSelectedCard] = useState(null)
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true)
@@ -29,20 +29,12 @@ function App() {
     setIsEditProfilePopupOpen(false)
     setIsAddPlacePopupOpen(false)
     setIsEditAvatarPopupOpen(false)
-    setSelectedCard({})
+    setSelectedCard(null)
   }
 
   function handleCardClick(card) {
     setSelectedCard({link: card.link, name: card.name})
-    setSelectedCard(true)
   } 
-
-  useEffect(() => {
-    //  Check if NOT undefined or null
-    if (selectedCard !== undefined && selectedCard !== null) {
-      console.log(' variable is NOT undefined or null');
-    }
-  }, [selectedCard]);
 
   return (
     <div className="page__content">
@@ -119,7 +111,6 @@ function App() {
 
       <ImagePopup 
         card={selectedCard}
-        isOpen={selectedCard}
         onClose = {closeAllPopups}>       
       </ImagePopup>
 

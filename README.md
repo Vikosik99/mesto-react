@@ -4,7 +4,7 @@
 
 - Сайт адаптивный.
 - Данная работа призвана показать навыки работы с java script
-- Данная работа призвана показать работу с помощью React
+- Данная работа призвана показать работу с помощью библиотеки React
 
 ---
 
@@ -19,4 +19,5 @@
 
 ## Ссылка проекта на GitHub:
 
-    https://vikosik99.github.io/mesto
+    https://vikosik99.github.io/mesto-react /  - реализация с React
+    https://vikosik99.github.io/mesto - реализация без React

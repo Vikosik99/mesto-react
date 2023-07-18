@@ -1,7 +1,9 @@
 import closeIcon from "../../images/icon-close.svg";
-export default function ImagePopup({isOpen, card, onClose}) {
+export default function ImagePopup({card, onClose}) {
+  const name = card ? card.name : '';
+  const link = card ? card.link : '#';
   return (      
-    <div className={`popup popup_open-size ${isOpen && 'popup_opened'} `}>
+    <div className={`popup popup_open-size ${card && 'popup_opened'} `}>
       <div className="popup__container popup__container_open-size">
         <button
           type="button"
@@ -16,28 +18,10 @@ export default function ImagePopup({isOpen, card, onClose}) {
         </button>
         <img 
           className="popup__element-img" 
-          src={card.link ? card.link: '#'} 
-          alt={card.name}/>
-        <h2 className="popup__element-text">{card.name}</h2>
+          src={link} 
+          alt={name}/>
+        <h2 className="popup__element-text">{name}</h2>
       </div>
     </div>
   );
 }
-// // Check specifically for null or undefined
-// if(financialPerformance === null || financialPerformance === undefined) {
-//   // Code...
-// }
-
-// // Checking for zero, could be returned ( not sure on your data )
-// if(financialPerformance === 0 || financialPerformance) {
-//    // Code...
-// }
-
-
-// {
-//   financialPerformance && financialPerformance.isConfirmed ? (
-//     <L.Text txtGray>Confirmed</L.Text>
-//   ) : (
-//     <L.Text txtGray>Not Confirmed</L.Text>
-//   )
-// }
