@@ -3,15 +3,24 @@ import Main from "./Main/Main.jsx";
 import Footer from "./Footer/Footer.jsx";
 import PopupWithForm from "./PopupWithForm/PopupWithForm.jsx";
 import ImagePopup from "./ImagePopup/ImagePopup.jsx";
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import CurrentUserContext from "../contexts/CurrentUserContext.js";
+import api from "../utils/api.js";
+
 
 
 function App() {
+  const [cards, setCards] = useState([])
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false)
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false)
   const [selectedCard, setSelectedCard] = useState(null)
+  const [isSurePopupOpen, setIsSurePopupOpen] = useState(false)
+
+  const [isHandleCardDelete , setIsHandleCardDelete] = useState("")
+
+  const [currentUser, setCurrentUser] = useState({})
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true)
@@ -29,6 +38,7 @@ function App() {
     setIsEditProfilePopupOpen(false)
     setIsAddPlacePopupOpen(false)
     setIsEditAvatarPopupOpen(false)
+    setIsSurePopupOpen(false)
     setSelectedCard(null)
   }
 
@@ -36,7 +46,45 @@ function App() {
     setSelectedCard({link: card.link, name: card.name})
   } 
 
+  function handleSureClick (id) {
+    setIsHandleCardDelete(id)
+    setIsSurePopupOpen(true)
+  }
+  
+  function handleCardLike(card) {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+        setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
+    }).catch(error => console.log(error));
+}
+
+function handleDeleteClick(event){
+  event.preventDefault()
+  api.deleteCard(isHandleCardDelete)
+  .then(() => {
+    setCards(cards.filter(card => {
+      return card._id !== isHandleCardDelete
+    }))
+    closeAllPopups()
+  }).catch((err) => console.log(`При удалении карточки: ${err}`));
+}
+
+  useEffect(() => {
+    Promise.all([api.getInitialCards(), api.getCards()])
+    .then(([dataUserServer, dataCardServer]) => {
+      setCurrentUser(dataUserServer)
+      // setuserDescription(dataUserServer.about)
+      // setUserAvatar(dataUserServer.avatar)
+      // setUserName(dataUserServer.name)
+      // dataCardServer.forEach((element) => (element.userid = dataUserServer._id)); // Реализация определения id юзера
+      setCards(dataCardServer)
+    }).catch((err) => console.log(`При добавлении карточек: ${err}`));
+  }, [])
   return (
+    <CurrentUserContext.Provider value={currentUser}>
     <div className="page__content">
       <Header>
       </Header>
@@ -105,7 +153,9 @@ function App() {
         name= 'sure' 
         title= 'Вы уверены?'
         buttonSave= 'Да'
-        
+        isOpen={isSurePopupOpen}
+        onClose = {closeAllPopups}
+        onCardDelete={handleDeleteClick}
       >
       </PopupWithForm>
 
@@ -136,12 +186,16 @@ function App() {
         onEditProfile = {handleEditProfileClick}
         onAddPlace = {handleAddPlaceClick}
         onEditAvatar = {handleEditAvatarClick}
-        onCardClick = {handleCardClick}>  
+        onCardClick = {handleCardClick} 
+        onCardSure = {handleSureClick}
+        onCardLike = {handleCardLike}
+        cards = {cards}>
       </Main>
 
       <Footer>
       </Footer>
     </div>
+    </CurrentUserContext.Provider>
   );
 }
 

@@ -60,24 +60,36 @@ class Api {
   }
 
   //   лайк карточки
-
-  addLike(cardId) {
+  changeLikeCardStatus(cardId, isLike) {
+    let method = "DELETE";
+    if (isLike) {
+      method = "PUT";
+    }
     return fetch(`${this._url}/cards/${cardId}/likes`, {
-      method: "PUT",
+      method: method,
       headers: {
         authorization: this._authorization,
       },
     }).then(this._checkRes);
   }
 
-  deleteLike(cardId) {
-    return fetch(`${this._url}/cards/${cardId}/likes`, {
-      method: "DELETE",
-      headers: {
-        authorization: this._authorization,
-      },
-    }).then(this._checkRes);
-  }
+  // addLike(cardId, isLike) {
+  //   return fetch(`${this._url}/cards/${cardId}/likes`, {
+  //     method: "PUT",
+  //     headers: {
+  //       authorization: this._authorization,
+  //     },
+  //   }).then(this._checkRes);
+  // }
+
+  // deleteLike(cardId, isLike) {
+  //   return fetch(`${this._url}/cards/${cardId}/likes`, {
+  //     method: "DELETE",
+  //     headers: {
+  //       authorization: this._authorization,
+  //     },
+  //   }).then(this._checkRes);
+  // }
 
   deleteCard(id) {
     return fetch(`${this._url}/cards/${id}`, {

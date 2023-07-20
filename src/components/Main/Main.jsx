@@ -1,25 +1,13 @@
-import { useEffect, useState } from "react"
+import { useContext} from "react"
 import profilePencil from "../../images/vector-pencil.svg"
 import profilePluse from "../../images/vector-plus.svg"
-import api from "../../utils/api"
 import Card from "../Card/Card.jsx"
+import CurrentUserContext from "../../contexts/CurrentUserContext.js";
 
-export default function Main({onEditProfile, onAddPlace, onEditAvatar, onCardClick}) {
-  const [userName, setUserName] = useState('')
-  const [userDescription, setuserDescription ] = useState('')
-  const [userAvatar, setUserAvatar] = useState('')
-  const [cards, setCards] = useState([])
 
-  useEffect(() => {
-    Promise.all([api.getInitialCards(), api.getCards()])
-    .then(([dataUserServer, dataCardServer]) => {
-      setuserDescription(dataUserServer.about)
-      setUserAvatar(dataUserServer.avatar)
-      setUserName(dataUserServer.name)
-      dataCardServer.forEach((element) => (element.userid = dataUserServer._id)); // Реализация определения id юзера
-      setCards(dataCardServer)
-    }).catch((err) => console.log(`При добавлении карточек: ${err}`));
-  }, [])
+export default function Main({cards, onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardSure, onCardDelete, onCardLike}) {
+
+const currentUser = useContext(CurrentUserContext)
 
   return (    
     <main className="content">
@@ -31,12 +19,12 @@ export default function Main({onEditProfile, onAddPlace, onEditAvatar, onCardCli
             onClick={onEditAvatar}>
             <img 
               className="profile__avatar" 
-              src={userAvatar} 
+              src={currentUser.avatar ? currentUser.avatar : "#"} 
               alt="аватар"/>
           </button>
           <div className="profile__info">
             <div className="profile__flex">
-              <h1 className="profile__username">{userName}</h1>
+              <h1 className="profile__username">{currentUser.name ? currentUser.name : ""}</h1>
               <button 
                 type="button" 
                 className="profile__button-edit" 
@@ -47,7 +35,7 @@ export default function Main({onEditProfile, onAddPlace, onEditAvatar, onCardCli
                   alt="ручка"/>
               </button>
             </div>
-            <p className="profile__status">{userDescription}</p>
+            <p className="profile__status">{currentUser.about ? currentUser.about : ""}</p>
           </div>
         </div>
         <button 
@@ -67,6 +55,8 @@ export default function Main({onEditProfile, onAddPlace, onEditAvatar, onCardCli
               card={data} 
               onCardClick={onCardClick}
               key={data._id}
+              onCardSure={onCardSure}
+              onCardLike={onCardLike}
             />
           )
         })}
