@@ -9,12 +9,12 @@
   margin: 0;
   padding: 0;
   border: 0;
-  border-top: 1px red solid;
+  /* border-top: 1px red solid; */
   padding-top: 5px;
   box-sizing: border-box;
   margin-top: -1px;
   min-height: 36px;
-  visibility: hidden;
+  visibility: visible;
 }
 
 /*525px*/
