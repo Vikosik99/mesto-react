@@ -8,6 +8,7 @@ import CurrentUserContext from "../contexts/CurrentUserContext.js";
 import api from "../utils/api.js";
 import EditProfilePopup from "./EditProfilePopup/EditProfilePopup.jsx";
 import EditAvatarPopup from "./EditAvatarPopup/EditAvatarPopup.jsx";
+import AddPlacePopup from "./AddPlacePopup/AddPlacePopup.jsx";
 
 
 function App() {
@@ -81,8 +82,8 @@ function App() {
       }).catch((err) => console.log(`При добавлении карточек: ${err}`));
   }, [])
 
-  function handleUpdateUser(data) {
-    api.setUserInfo(data)
+  function handleUpdateUser({ name, about }) {
+    api.setUserInfo({ name, about })
       .then((res) => {
         setCurrentUser(res)
       }).catch((err) => console.log(`При добавлении исходных имени и статуса: ${err}`));
@@ -91,10 +92,19 @@ function App() {
 
   function handleUpdateAvatar(data) {
     api.setUserAvatar(data)
-      .then((res) =>
-        setCurrentUser(res))
-    closeAllPopups()
+      .then((res) => {
+        setCurrentUser(res)
+      })
       .catch((err) => console.log(`При обновлении аватара: ${err}`));
+    closeAllPopups()
+  }
+
+  function handleAddPlaceSubmit({ name, link }) {
+    api.createNewCard({ name, link })
+      .then((res) => {
+        setCards([res, ...cards])
+      }).catch((err) => console.log(`При добавлении новых карточек: ${err}`));
+    closeAllPopups()
   }
 
   return (
@@ -109,34 +119,11 @@ function App() {
           onUpdateUser={handleUpdateUser}>
         </EditProfilePopup>
 
-        <PopupWithForm
-          name='card-add'
-          title='Новое место'
-          buttonSave='Создать'
+        <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
-        >
-          <input
-            minLength={2}
-            maxLength={30}
-            type="text"
-            name="placename"
-            id="placename"
-            className="form__input form__input_add form__input_kye_placename"
-            placeholder="Название"
-            required=""
-          />
-          <span className="form__input-error form__input-error_type_placename" />
-          <input
-            type="url"
-            name="placelink"
-            id="placelink"
-            className="form__input form__input_add form__input_kye_placelink"
-            placeholder="Ссылка на картинку"
-            required=""
-          />
-          <span className="form__input-error form__input-error_type_placelink" />
-        </PopupWithForm>
+          onAddPlace={handleAddPlaceSubmit}>
+        </AddPlacePopup>
 
         <PopupWithForm
           name='sure'

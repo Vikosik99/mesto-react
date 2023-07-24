@@ -1,9 +1,16 @@
 import { useRef } from "react"
 import PopupWithForm from "../PopupWithForm/PopupWithForm"
+import { useState } from "react"
 
 export default function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
 
     const input = useRef()
+
+    const [avatar, setAvatar] = useState("")
+
+    function handleChangeAvatar(event) {
+        setAvatar(event.target.value)
+    }
 
     function handleSubmit(event) {
         event.preventDefault()
@@ -16,7 +23,8 @@ export default function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
             buttonSave='Сохранить'
             isOpen={isOpen}
             onClose={onClose}
-            onUpdateAvatar={handleSubmit}
+            onSubmit={handleSubmit}
+
         >
             <input
                 ref={input}
@@ -26,6 +34,8 @@ export default function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
                 className="form__input form__input_change-avatar form__input_kye_avatarlink"
                 placeholder="Ссылка на картинку"
                 required=""
+                value={avatar || ""}
+                onChange={handleChangeAvatar}
             />
             <span className="form__input-error form__input-error_type_avatarlink"></span>
         </PopupWithForm>

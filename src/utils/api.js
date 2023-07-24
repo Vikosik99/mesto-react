@@ -27,34 +27,34 @@ class Api {
     }).then(this._checkRes);
   }
 
-  setUserInfo(data) {
+  setUserInfo({ name, about }) {
     return fetch(`${this._url}/users/me`, {
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({
-        name: data.name,
-        about: data.description,
+        name: name,
+        about: about,
       }),
     }).then(this._checkRes);
   }
 
-  setUserAvatar(data) {
+  setUserAvatar({ avatar }) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify({
-        avatar: data.avatarlink,
+        avatar: avatar,
       }),
     }).then(this._checkRes);
   }
 
-  createNewCard(data) {
+  createNewCard({ name, link }) {
     return fetch(`${this._url}/cards`, {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({
-        name: data.placename,
-        link: data.placelink,
+        name: name,
+        link: link,
       }),
     }).then(this._checkRes);
   }
