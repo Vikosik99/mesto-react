@@ -1,10 +1,13 @@
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 import PopupWithForm from "../PopupWithForm/PopupWithForm"
-import { useState } from "react"
+import { useState, useEffect, useContext } from "react"
 
 export default function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
 
     const [name, setName] = useState("")
     const [link, setLink] = useState("")
+
+    const currentUser = useContext(CurrentUserContext);
 
     function handleChangeName(event) {
         setName(event.target.value)
@@ -21,6 +24,14 @@ export default function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
             link: link,
         })
     }
+
+    useEffect(() => {
+        if (isOpen) {
+            setName("");
+            setLink("");
+        }
+    }, [currentUser, isOpen]);
+
     return (
         <PopupWithForm
             name='card-add'
@@ -38,7 +49,7 @@ export default function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
                 id="placename"
                 className="form__input form__input_add form__input_kye_placename"
                 placeholder="Название"
-                required=""
+                required
                 value={name || ""}
                 onChange={handleChangeName}
             />
@@ -49,7 +60,7 @@ export default function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
                 id="placelink"
                 className="form__input form__input_add form__input_kye_placelink"
                 placeholder="Ссылка на картинку"
-                required=""
+                required
                 value={link || ""}
                 onChange={handleChangeLink}
             />

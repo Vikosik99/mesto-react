@@ -52,7 +52,7 @@ export default function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
                 id="username"
                 className="form__input form__input_redaction form__input_kye_username"
                 placeholder="Имя"
-                required=""
+                required
                 value={name || ""}
                 onChange={handleChangeName}
             />
@@ -65,7 +65,7 @@ export default function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
                 id="status"
                 className="form__input form__input_redaction form__input_kye_status"
                 placeholder="О себе"
-                required=""
+                required
                 value={description || ""}
                 onChange={handleChangeDescription}
             // onChange={handleValidity}

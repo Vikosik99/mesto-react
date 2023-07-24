@@ -15,7 +15,7 @@ export default function PopupWithForm({ name, title, buttonSave, children, isOpe
             alt="крест"
           />
         </button>
-        <form className="form" name="formPopup" noValidate onSubmit={onSubmit}>
+        <form className="form" name="formPopup" onSubmit={onSubmit}>
           <h2 className="form__caption">{title}</h2>
           {children}
           <button type="submit" className="form__button-save">{buttonSave}</button>

@@ -86,25 +86,25 @@ function App() {
     api.setUserInfo({ name, about })
       .then((res) => {
         setCurrentUser(res)
+        closeAllPopups()
       }).catch((err) => console.log(`При добавлении исходных имени и статуса: ${err}`));
-    closeAllPopups()
   }
 
   function handleUpdateAvatar(data) {
     api.setUserAvatar(data)
       .then((res) => {
         setCurrentUser(res)
+        closeAllPopups()
       })
       .catch((err) => console.log(`При обновлении аватара: ${err}`));
-    closeAllPopups()
   }
 
   function handleAddPlaceSubmit({ name, link }) {
     api.createNewCard({ name, link })
       .then((res) => {
         setCards([res, ...cards])
+        closeAllPopups()
       }).catch((err) => console.log(`При добавлении новых карточек: ${err}`));
-    closeAllPopups()
   }
 
   return (
