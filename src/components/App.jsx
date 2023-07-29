@@ -9,7 +9,12 @@ import api from "../utils/api.js";
 import EditProfilePopup from "./EditProfilePopup/EditProfilePopup.jsx";
 import EditAvatarPopup from "./EditAvatarPopup/EditAvatarPopup.jsx";
 import AddPlacePopup from "./AddPlacePopup/AddPlacePopup.jsx";
-
+import { Navigate, Route, useNavigate, Routes } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute/ProtectedRoute.jsx";
+import * as apiAuth from "../utils/ApiAuth";
+import Login from "./Login/Login.jsx";
+import Register from "./Register/Register.jsx";
+import InfoTooltip from "./InfoTooltip/InfoTooltip.jsx";
 
 function App() {
   const [cards, setCards] = useState([])
@@ -23,6 +28,16 @@ function App() {
   const [isHandleCardDelete, setIsHandleCardDelete] = useState("")
 
   const [currentUser, setCurrentUser] = useState({})
+
+
+
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [isInfoTooltipSuccess, setIsInfoTooltipSuccess] = useState(false);
+  const [headerEmail, setHeaderEmail] = useState("");
+
+  const [isInfoTooltipPopup, setIsInfoTooltipPopup] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true)
@@ -42,6 +57,8 @@ function App() {
     setIsEditAvatarPopupOpen(false)
     setIsSurePopupOpen(false)
     setSelectedCard(null)
+    setIsInfoTooltipPopup(false);
+
   }
 
   function handleCardClick(card) {
@@ -75,12 +92,14 @@ function App() {
   }
 
   useEffect(() => {
-    Promise.all([api.getInitialCards(), api.getCards()])
-      .then(([dataUserServer, dataCardServer]) => {
-        setCurrentUser(dataUserServer)
-        setCards(dataCardServer)
-      }).catch((err) => console.log(`При добавлении карточек: ${err}`));
-  }, [])
+    if (loggedIn) {
+      Promise.all([api.getInitialCards(), api.getCards()])
+        .then(([dataUserServer, dataCardServer]) => {
+          setCurrentUser(dataUserServer)
+          setCards(dataCardServer)
+        }).catch((err) => console.log(`При добавлении карточек: ${err}`));
+    }
+  }, [loggedIn])
 
   function handleUpdateUser({ name, about }) {
     api.setUserInfo({ name, about })
@@ -107,11 +126,105 @@ function App() {
       }).catch((err) => console.log(`При добавлении новых карточек: ${err}`));
   }
 
+  function handleRegister(data) {
+    apiAuth
+      .register(data)
+      .then((res) => {
+        if (res && res.data) {
+          setIsInfoTooltipSuccess(true);
+          navigate("/sign-in");
+        }
+      })
+      .catch((err) => {
+        setIsInfoTooltipSuccess(false);
+        console.log(err);
+      })
+      .finally(() =>
+        setIsInfoTooltipPopup(true));
+  }
+
+  function handleLogin(data) {
+    apiAuth
+      .login(data)
+      .then((res) => {
+        if (res && res.token) {
+          localStorage.setItem("jwt", res.token);
+          navigate("/");
+          setHeaderEmail(data.email);
+          setLoggedIn(true);
+        }
+      })
+      .catch((err) => {
+        setIsInfoTooltipSuccess(false);
+        setIsInfoTooltipPopup(true);
+        console.log(err);
+      });
+  }
+
+  function checkToken() {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      apiAuth
+        .checkToken(token)
+        .then((res) => {
+          if (res && res.data) {
+            setLoggedIn(true);
+            navigate("/");
+            setHeaderEmail(res.data.email);
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      setLoggedIn(false);
+    }
+  }
+
+  function logOut() {
+    setLoggedIn(false);
+    localStorage.removeItem("jwt");
+    setHeaderEmail("");
+  }
+
+  useEffect(() => {
+    checkToken();
+  }, []);
+
+
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__content">
-        <Header>
-        </Header>
+        <Header loggedIn={loggedIn} email={headerEmail} logOut={logOut} />
+        <Routes>
+          <Route
+            path="/sign-up"
+            element={<Register onRegister={handleRegister} />}
+          />
+          <Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
+          <Route
+            path="*"
+            element={<Navigate to={loggedIn ? "/" : "/sign-in"} />}
+          />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute
+                loggedIn={loggedIn}
+                element={Main}
+                onEditAvatar={handleEditAvatarClick}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onCardClick={handleCardClick}
+                onDelete={handleDeleteClick}
+                cards={cards}
+                onCardLike={handleCardLike}
+              />
+            }
+          />
+        </Routes>
+
+        {/* <Header>
+        </Header> */}
 
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
@@ -147,7 +260,19 @@ function App() {
         >
         </EditAvatarPopup>
 
-        <Main
+        {/* <Login></Login> */}
+        {/* <Register></Register> */}
+        {/* <ErrorPopup
+          title='Что-то пошло не так!
+          Попробуйте ещё раз.'
+        ></ErrorPopup> */}
+        {/* 
+        <DonePopup
+          title='Вы успешно зарегистрировались!'></DonePopup> */}
+
+        {/* <InfoTooltip></InfoTooltip> */}
+
+        {/* <Main
           onEditProfile={handleEditProfileClick}
           onAddPlace={handleAddPlaceClick}
           onEditAvatar={handleEditAvatarClick}
@@ -155,12 +280,19 @@ function App() {
           onCardSure={handleSureClick}
           onCardLike={handleCardLike}
           cards={cards}>
-        </Main>
+        </Main> */}
 
-        <Footer>
-        </Footer>
+        {/* <Footer>
+        </Footer> */}
+        <InfoTooltip
+          name="tooltip"
+          isOpen={isInfoTooltipPopup}
+          onClose={closeAllPopups}
+          isSuccess={isInfoTooltipSuccess}
+        />
+        {loggedIn && <Footer />}
       </div>
-    </CurrentUserContext.Provider>
+    </CurrentUserContext.Provider >
   );
 }
 

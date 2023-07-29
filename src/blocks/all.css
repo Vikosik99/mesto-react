@@ -1,0 +1,145 @@
+.checkIn {
+    max-width: 880px;
+    min-width: 880px;
+    height: auto;
+}
+
+.checkIn__container {
+    margin: auto;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+    position: relative;
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+    width: 358px;
+}
+
+.form__caption_checkIn {
+    color: #ffffff;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.form__input_checkIn {
+    color: #ffffff;
+    background-color: transparent;
+    border-bottom: 1px rgba(204, 204, 204) solid;
+}
+
+.form__button-save_checkIn {
+    width: 358px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    border-radius: 2px;
+    cursor: not-allowed;
+    font-family: "Inter", Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+    margin-top: 194px;
+    background-color: transparent;
+    color: rgba(0, 0, 0, 0.2);
+    border: 1px rgba(0, 0, 0, 0.2) solid;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px #ffffff solid;
+    cursor: pointer;
+}
+
+.header__text {
+    color: #ffffff;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    font-family: "Inter", Arial, sans-serif;
+}
+
+.header__authorization {
+    display: flex;
+    gap: 24px;
+}
+
+.header__log {
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    border-radius: 2px;
+    cursor: not-allowed;
+    font-family: "Inter", Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+    background-color: transparent;
+    box-sizing: border-box;
+    color: #A9A9A9;
+    cursor: pointer;
+    border: 0;
+}
+
+.form_checkIn {
+    padding: 20px 0 37px;
+}
+
+.form__imputs {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+}
+
+.form__button {
+    background-color: transparent;
+    border: 0;
+    color: #ffffff;
+    font-family: "Inter", Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    margin-top: 15px;
+}
+
+.popup__container_errorOrDonePopup {
+    width: 430px;
+    height: 330px;
+    justify-items: center;
+    align-content: center;
+}
+
+.form__caption_errorOrDonePopup {
+    margin: auto;
+    margin-top: 32px;
+    text-align: center;
+}
+
+.popup__errorOrDonePopup_done {
+    background-image: url(../images/Union-Done.svg);
+    width: 120px;
+    height: 120px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.popup__errorOrDonePopup_error {
+    background-image: url(../images/Union.svg);
+    width: 120px;
+    height: 120px;
+    background-repeat: no-repeat;
+    background-position: center;
+}

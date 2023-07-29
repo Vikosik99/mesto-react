@@ -4,6 +4,8 @@
   width: 880px;
   box-sizing: border-box;
   padding-bottom: 36px;
+  display: flex;
+  justify-content: space-between;
 }
 
 /*930px*/
