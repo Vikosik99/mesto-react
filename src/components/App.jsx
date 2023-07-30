@@ -16,7 +16,7 @@ import Login from "./Login/Login.jsx";
 import Register from "./Register/Register.jsx";
 import InfoTooltip from "./InfoTooltip/InfoTooltip.jsx";
 
-function App() {
+export default function App() {
   const [cards, setCards] = useState([])
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
@@ -29,14 +29,12 @@ function App() {
 
   const [currentUser, setCurrentUser] = useState({})
 
-
-
   const [loggedIn, setLoggedIn] = useState(false);
-  const [isInfoTooltipSuccess, setIsInfoTooltipSuccess] = useState(false);
+  const [isInfoTooltipPopup, setIsInfoTooltipPopup] = useState(false);
+  const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
+
   const [headerEmail, setHeaderEmail] = useState("");
 
-  const [isInfoTooltipPopup, setIsInfoTooltipPopup] = useState(false);
-  // const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   function handleEditProfileClick() {
@@ -57,8 +55,7 @@ function App() {
     setIsEditAvatarPopupOpen(false)
     setIsSurePopupOpen(false)
     setSelectedCard(null)
-    setIsInfoTooltipPopup(false);
-
+    setIsInfoTooltipPopupOpen(false);
   }
 
   function handleCardClick(card) {
@@ -126,106 +123,110 @@ function App() {
       }).catch((err) => console.log(`При добавлении новых карточек: ${err}`));
   }
 
-  function handleRegister(data) {
+  function onRegister(data) {
     apiAuth
-      .register(data)
+      .signup(data)
       .then((res) => {
         if (res && res.data) {
-          setIsInfoTooltipSuccess(true);
+          setIsInfoTooltipPopup(true);
           navigate("/sign-in");
         }
       })
       .catch((err) => {
-        setIsInfoTooltipSuccess(false);
-        console.log(err);
+        setIsInfoTooltipPopup(false);
+        console.log(`При onRegister: ${err}`);
       })
       .finally(() =>
-        setIsInfoTooltipPopup(true));
+        setIsInfoTooltipPopupOpen(true));
   }
 
-  function handleLogin(data) {
+  function onLogin(data) {
     apiAuth
-      .login(data)
+      .signin(data)
       .then((res) => {
-        if (res && res.token) {
-          localStorage.setItem("jwt", res.token);
-          navigate("/");
+        if (res && res.rout) {
+          localStorage.setItem("jwt", res.rout);
           setHeaderEmail(data.email);
           setLoggedIn(true);
+          navigate("/");
         }
       })
       .catch((err) => {
-        setIsInfoTooltipSuccess(false);
-        setIsInfoTooltipPopup(true);
-        console.log(err);
+        setIsInfoTooltipPopup(false);
+        setIsInfoTooltipPopupOpen(true);
+        console.log(`При onLogin: ${err}`);
       });
   }
 
-  function checkToken() {
-    const token = localStorage.getItem("jwt");
-    if (token) {
-      apiAuth
-        .checkToken(token)
-        .then((res) => {
-          if (res && res.data) {
-            setLoggedIn(true);
-            navigate("/");
-            setHeaderEmail(res.data.email);
-          }
-        })
-        .catch((err) => console.log(err));
-    } else {
-      setLoggedIn(false);
-    }
-  }
-
-  function logOut() {
+  function onSignOut() {
     setLoggedIn(false);
     localStorage.removeItem("jwt");
     setHeaderEmail("");
   }
 
   useEffect(() => {
-    checkToken();
-  }, []);
+    function routCheck() {
+      const rout = localStorage.getItem("jwt");
+      if (rout) {
+        apiAuth
+          .routCheck(rout)
+          .then((res) => {
+            if (res && res.user) {
+              setLoggedIn(true);
+              navigate("/");
+              setHeaderEmail(res.user.email);
+            }
+          })
+          .catch((err) => console.log(`При routCheck: ${err}`));
+      } else {
+        setLoggedIn(false);
+      }
+    }
+    routCheck();
+  }, [navigate]);
 
 
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__content">
-        <Header loggedIn={loggedIn} email={headerEmail} logOut={logOut} />
+        <Header loggedIn={loggedIn} email={headerEmail} onSignOut={onSignOut} />
         <Routes>
-          <Route
-            path="/sign-up"
-            element={<Register onRegister={handleRegister} />}
-          />
-          <Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
-          <Route
-            path="*"
-            element={<Navigate to={loggedIn ? "/" : "/sign-in"} />}
-          />
           <Route
             path="/"
             element={
               <ProtectedRoute
-                loggedIn={loggedIn}
-                element={Main}
-                onEditAvatar={handleEditAvatarClick}
                 onEditProfile={handleEditProfileClick}
                 onAddPlace={handleAddPlaceClick}
+                onEditAvatar={handleEditAvatarClick}
                 onCardClick={handleCardClick}
-                onDelete={handleDeleteClick}
-                cards={cards}
+                onCardSure={handleSureClick}
                 onCardLike={handleCardLike}
+                cards={cards}
+                loggedIn={loggedIn}
+                element={Main}
               />
             }
+          />
+          <Route
+            path="/sign-up"
+            element={<Register onRegister={onRegister} />}
+          />
+          <Route path="/sign-in" element={<Login onLogin={onLogin} />} />
+          <Route
+            path="*"
+            element={<Navigate to={loggedIn ? "/" : "/sign-in"} />}
           />
         </Routes>
 
         {/* <Header>
         </Header> */}
-
+        <InfoTooltip
+          name="infotooltip"
+          isOpen={isInfoTooltipPopupOpen}
+          onClose={closeAllPopups}
+          isStatus={isInfoTooltipPopup}
+        />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
@@ -284,16 +285,8 @@ function App() {
 
         {/* <Footer>
         </Footer> */}
-        <InfoTooltip
-          name="tooltip"
-          isOpen={isInfoTooltipPopup}
-          onClose={closeAllPopups}
-          isSuccess={isInfoTooltipSuccess}
-        />
         {loggedIn && <Footer />}
       </div>
     </CurrentUserContext.Provider >
   );
 }
-
-export default App;

@@ -3,11 +3,8 @@ import profilePencil from "../../images/vector-pencil.svg"
 import profilePluse from "../../images/vector-plus.svg"
 import Card from "../Card/Card.jsx"
 import CurrentUserContext from "../../contexts/CurrentUserContext.js";
-// import Register from "../Register/Register";
-// import Login from "../Login/Login";
 
-
-export default function Main({ name, handleRegister, handleLogin, cards, onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardSure, onSubmit, onCardLike }) {
+export default function Main({ cards, onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardSure, onCardLike }) {
 
   const currentUser = useContext(CurrentUserContext)
 

@@ -1,13 +1,6 @@
 import { useState } from "react"
-// import profilePencil from "../../images/vector-pencil.svg"
-// import profilePluse from "../../images/vector-plus.svg"
-// import Card from "../Card/Card.jsx"
-// import CurrentUserContext from "../../contexts/CurrentUserContext.js";
-// import NLR from "../NRL/NLR";
-// import { Link } from "react-router-dom";
 
-
-export default function Login({ name, onRegister, cards, onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardSure, onSubmit, onCardLike }) {
+export default function Login({ onLogin }) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -21,13 +14,11 @@ export default function Login({ name, onRegister, cards, onEditProfile, onAddPla
 
     function handleSubmit(event) {
         event.preventDefault();
-        onRegister({
+        onLogin({
             email: email,
             password: password
         });
     }
-
-    // const currentUser = useContext(CurrentUserContext)
 
     return (
         <div className="checkIn" >
@@ -56,7 +47,7 @@ export default function Login({ name, onRegister, cards, onEditProfile, onAddPla
                             placeholder="Пароль"
                             required
                             value={password}
-                            current-password
+                            autoComplete="current-password"
                             onChange={handleChangePassword}
                         />
                         <span className="form__input-error form__input-error_type_password" />

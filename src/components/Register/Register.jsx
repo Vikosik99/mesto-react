@@ -1,13 +1,8 @@
 import { useState } from "react"
-// import profilePencil from "../../images/vector-pencil.svg"
-// import profilePluse from "../../images/vector-plus.svg"
-// import Card from "../Card/Card.jsx"
-// import CurrentUserContext from "../../contexts/CurrentUserContext.js";
-// import NLR from "../NRL/NLR";
 import { Link } from "react-router-dom";
 
 
-export default function Register({ name, onRegister, cards, onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardSure, onSubmit, onCardLike }) {
+export default function Register({ onRegister }) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -26,8 +21,6 @@ export default function Register({ name, onRegister, cards, onEditProfile, onAdd
             password: password
         });
     }
-
-    // const currentUser = useContext(CurrentUserContext)
 
     return (
         <div className="checkIn" >
@@ -56,14 +49,14 @@ export default function Register({ name, onRegister, cards, onEditProfile, onAdd
                             placeholder="Пароль"
                             required
                             value={password}
-                            current-password
+                            autoComplete="current-password"
                             onChange={handleChangePassword}
                         />
                         <span className="form__input-error form__input-error_type_password" />
                     </div>
                     <button type="submit" className="form__button-save form__button-save_checkIn">Зарегистрироваться</button>
                 </form>
-                <Link to="/sign-in" className="auth__link">
+                <Link to="/sign-in" className="checkIn__text">
                     Уже зарегистрированы? Войти
                 </Link>
             </div>

@@ -1,9 +1,8 @@
-import React from "react";
-import { Routes, Route, Link, useLocation, Navigate } from "react-router-dom";
-
-
 import logoHeader from "../../images/logo-header.svg"
-export default function Header(loggedIn, email, logOut) {
+
+import { useLocation, Routes, Route, Link, Navigate } from "react-router-dom";
+
+export default function Header({ email, loggedIn, onSignOut }) {
   const location = useLocation();
 
   return (
@@ -14,31 +13,25 @@ export default function Header(loggedIn, email, logOut) {
         alt="логотип"
       />
       <div className="header__authorization">
-        {loggedIn && <p className="header__text">{email}</p>}
+        {loggedIn && <p className="header__email">{email}</p>}
         <Routes>
           <Route
             path="/sign-up"
             element={
-              <Link to="/sign-in" className="header__link header__button">
-                Войти
-              </Link>
-            }
-          />
+              <Link to="/sign-in" className="header__sign">Войти</Link>
+            } />
           <Route
             path="/sign-in"
             element={
-              <Link to="/sign-up" className="header__link header__button">
-                Регистрация
-              </Link>
-            }
-          />
+              <Link to="/sign-up" className="header__sign">Регистрация</Link>
+            } />
           <Route
             path="*"
-            element={<Navigate to={loggedIn ? "/" : "/sign-in"} />}
-          />
+            element={<Navigate to={loggedIn ? "/" : "/sign-in"} />
+            } />
         </Routes>
         {loggedIn && (
-          <button className="header__log" onClick={logOut}>
+          <button className="header__log" onClick={onSignOut}>
             {loggedIn ? "Выйти" : location.pathname === "/sign-in" ? "Регистрация" : "Войти"}
           </button>
         )}

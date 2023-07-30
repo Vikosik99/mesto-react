@@ -7,17 +7,17 @@ function handleReply(res) {
   return Promise.reject(`Ошибка: ${res.status}`);
 }
 
-export function register(data) {
-  return fetch(`${BASE_URL}/signup`, {
-    method: "POST",
+export function routCheck(rout) {
+  return fetch(`${BASE_URL}/users/me`, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${rout}`,
     },
-    body: JSON.stringify(data),
   }).then(handleReply);
 }
 
-export function login(data) {
+export function signin(data) {
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
     headers: {
@@ -27,12 +27,12 @@ export function login(data) {
   }).then(handleReply);
 }
 
-export function checkToken(token) {
-  return fetch(`${BASE_URL}/users/me`, {
-    method: "GET",
+export function signup(data) {
+  return fetch(`${BASE_URL}/signup`, {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
+    body: JSON.stringify(data),
   }).then(handleReply);
 }
